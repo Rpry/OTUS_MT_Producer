@@ -27,52 +27,40 @@ namespace Producer
 
             await busControl.StartAsync(source.Token);
             try
-            {
-                while (true)
+            {       
+                //PUBLISH
+                await busControl.Publish(new MessageDto
                 {
-                    string value = await Task.Run(() =>
-                    {
-                        Console.WriteLine("Enter message (or quit to exit)");
-                        Console.Write("> ");
-                        return Console.ReadLine();
-                    });
-
-                    if("quit".Equals(value, StringComparison.OrdinalIgnoreCase))
-                        break;
-
-                    
-                    /*
-                    //PUBLISH
-                    await busControl.Publish(new MessageDto
-                    {
-                        Content = value
-                    });
-                    */
-                    
-                    //SEND
-                    /*
-                    var queueName = "masstransit_event_queue_1";
-                    var sendEndpoint = await busControl.GetSendEndpoint(new Uri($"queue:{queueName}"));
-                    if (sendEndpoint == null)
-                    {
-                        throw new Exception($"Не удалось найти очередь {queueName}");
-                    }
-                    await sendEndpoint.Send(new MessageDto
-                    {
-                        Content = value
-                    }, CancellationToken.None);                    
-                    */
-                    
-                    //REQUEST
-                    var response = await busControl.Request<Request, CommonNamespace.Response>( new Request
-                    {
-                        Message = new MessageDto
-                        {
-                            Content = value
-                        }
-                    }, CancellationToken.None);
-                    Console.WriteLine($"Response success: {response.Message.IsSuccess}");
+                    Content = "message!"
+                });
+                
+                
+                
+                //SEND
+                /*
+                var queueName = "masstransit_event_queue_1";
+                var sendEndpoint = await busControl.GetSendEndpoint(new Uri($"queue:{queueName}"));
+                if (sendEndpoint == null)
+                {
+                    throw new Exception($"Не удалось найти очередь {queueName}");
                 }
+                await sendEndpoint.Send(new MessageDto
+                {
+                    Content = "message!"
+                }, CancellationToken.None);                    
+                */
+                
+                /*
+                //REQUEST
+                var response = await busControl.Request<Request, CommonNamespace.Response>( new Request
+                {
+                    Message = new MessageDto
+                    {
+                        Content = "message!"
+                    }
+                }, CancellationToken.None);
+                Console.WriteLine($"Response success: {response.Message.IsSuccess}");
+                */
             }
             finally
             {
