@@ -33,9 +33,7 @@ namespace Producer
                 {
                     Content = "message!"
                 });
-                
-                
-                
+
                 //SEND
                 /*
                 var queueName = "masstransit_event_queue_1";
