@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CommonNamespace;
 using MassTransit;
+using MassTransit.RabbitMqTransport;
 
 namespace Producer
 {
@@ -10,22 +9,9 @@ namespace Producer
     {
         public static async Task Main()
         {
-            var busControl = Bus.Factory.CreateUsingRabbitMq(configurator =>
-            {
-                {
-                    configurator.Host("hawk.rmq.cloudamqp.com",
-                        "ykziztbb",
-                        h =>
-                    {
-                        h.Username("ykziztbb");
-                        h.Password("oZaUpy2Sru1P0b04K9ghjx3MSFpXTMIU");
-                    });
-                }
-            });
+            var busControl = Bus.Factory.CreateUsingRabbitMq(Configure);
 
-            var source = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-
-            await busControl.StartAsync(source.Token);
+            await busControl.StartAsync();
             try
             {       
                 //PUBLISH
@@ -64,6 +50,21 @@ namespace Producer
             {
                 await busControl.StopAsync();
             }
+        }
+        
+        /// <summary>
+        /// Конфигурирование
+        /// </summary>
+        /// <param name="configurator"></param>
+        private static void Configure(IRabbitMqBusFactoryConfigurator configurator)
+        {
+            configurator.Host("hawk.rmq.cloudamqp.com",
+                "ykziztbb",
+                h =>
+                {
+                    h.Username("ykziztbb");
+                    h.Password("oZaUpy2Sru1P0b04K9ghjx3MSFpXTMIU");
+                });
         }
     }
 }
